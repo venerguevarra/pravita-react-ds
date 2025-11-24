@@ -25,8 +25,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm' # or 'pnpm' later, but npm is fine for global install
-          cache-dependency-path: ./pnpm-lock.yaml
 
       - name: Install pnpm
         run: npm install -g pnpm@9

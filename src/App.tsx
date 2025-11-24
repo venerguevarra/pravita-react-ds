@@ -1,3 +1,5 @@
+import { Button } from './components';
+
 function App() {
   return (
     <main
@@ -9,9 +11,20 @@ function App() {
     >
       <h1>Design System Sandbox</h1>
       <p>
-        This app is just a local playground for the design system. Components and
-        layouts will be tested here while building the library.
+        Local playground for testing design-system components during development.
       </p>
+
+      <section
+        style={{
+          marginTop: '16px',
+          display: 'flex',
+          gap: '12px',
+        }}
+      >
+        <Button>Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="subtle">Subtle</Button>
+      </section>
     </main>
   );
 }

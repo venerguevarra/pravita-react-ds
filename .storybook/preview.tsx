@@ -1,4 +1,5 @@
 // .storybook/preview.tsx
+import '@mantine/core/styles.css';
 import React from 'react';
 import type { Preview } from '@storybook/react';
 import { DSProvider } from '../src/design-system/DSProvider';

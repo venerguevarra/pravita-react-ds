@@ -1,73 +1,194 @@
-# React + TypeScript + Vite
+# 📦 Pravita React Design System (`pravita-react-ds`)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A reusable **React + TypeScript** Design System built with **Mantine**,
+**Vite**, and **tsup**, designed for use across multiple Pravita
+applications (e.g. `pravita-hub-app`).\
+This package provides a consistent UI component library, theming layer,
+and Storybook-powered documentation.
 
-Currently, two official plugins are available:
+------------------------------------------------------------------------
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## React Compiler
+-   ⚛️ **React + TypeScript** with strict typing (no `any`)
+-   🎨 **Mantine-based component primitives**
+-   🧩 Custom, reusable DS components (`Button`, future UI components)
+-   🌗 **DSProvider** for theming and color-mode handling
+-   📚 **Storybook** documentation (`pnpm storybook`)
+-   📦 Built with **tsup** → outputs ESM, CJS, and `.d.ts` files
+-   🔌 Published package supports semver (`0.1.0`, `0.2.0`, ...)
+-   🔄 Compatible with Vite-based consumer apps
+-   🎯 Zero-config consumption:
+    `import { Button } from 'pravita-react-ds'`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+------------------------------------------------------------------------
 
-## Expanding the ESLint configuration
+## 1. Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Ensure you have:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+-   **Node.js 20+**
+-   **pnpm 9+**
+-   **Git**
+-   (Optional) npm account for publishing
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Check:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+``` bash
+node -v
+pnpm -v
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+------------------------------------------------------------------------
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 2. Getting started
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Clone the repo:
+
+``` bash
+git clone https://github.com/<your-username>/pravita-react-ds.git
+cd pravita-react-ds
+pnpm install
 ```
+
+------------------------------------------------------------------------
+
+## 3. Project structure
+
+    src/
+      design-system/
+        DSProvider.tsx
+        tokens.ts
+        mantineTheme.ts
+      components/
+        index.ts
+        button/
+          Button.tsx
+          Button.stories.tsx
+      App.tsx
+      main.tsx
+      index.css
+
+    src/index.ts
+
+------------------------------------------------------------------------
+
+## 4. Scripts
+
+``` bash
+pnpm dev            # run local dev sandbox
+pnpm storybook      # run storybook
+pnpm lint           # run ESLint
+pnpm build          # build library using tsup
+pnpm preview        # preview vite build
+```
+
+------------------------------------------------------------------------
+
+## 5. Build (tsup)
+
+Tsup generates:
+
+-   `dist/index.js` (ES module)
+-   `dist/index.cjs` (CommonJS)
+-   `dist/index.d.ts` (Types)
+-   sourcemaps
+
+------------------------------------------------------------------------
+
+## 6. Publishing to npm
+
+Login:
+
+``` bash
+npm login
+```
+
+Build:
+
+``` bash
+pnpm build
+```
+
+Version bump:
+
+``` bash
+npm version patch | minor | major
+git push
+git push --tags
+```
+
+Publish:
+
+``` bash
+npm publish --access public
+```
+
+------------------------------------------------------------------------
+
+## 7. Consuming the Design System
+
+Install:
+
+``` bash
+pnpm add pravita-react-ds @mantine/core @mantine/hooks @mantine/notifications
+```
+
+Wrap the app:
+
+``` tsx
+import { DSProvider } from 'pravita-react-ds';
+import '@mantine/core/styles.css';
+
+<DSProvider>
+  <App />
+</DSProvider>
+```
+
+Use components:
+
+``` tsx
+import { Button } from 'pravita-react-ds';
+
+<Button>Primary</Button>
+```
+
+------------------------------------------------------------------------
+
+## 8. Storybook Deployment
+
+Storybook is deployed via GitHub Pages:
+
+    https://<your-username>.github.io/pravita-react-ds/
+
+------------------------------------------------------------------------
+
+## 9. Release Workflow
+
+1.  Make changes\
+
+2.  `pnpm lint`\
+
+3.  `pnpm build`\
+
+4.  `npm version patch|minor|major`\
+
+5.  Push tags\
+
+6.  `npm publish`\
+
+7.  Update consumer apps
+
+    ``` bash
+    pnpm add pravita-react-ds@latest
+    ```
+
+------------------------------------------------------------------------
+
+## 10. Contributing
+
+1.  Add new component under `src/components/`
+2.  Add Storybook file
+3.  Export in `src/components/index.ts`
+4.  Export in `src/index.ts`
+5.  Build & test

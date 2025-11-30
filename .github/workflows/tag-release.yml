@@ -1,16 +1,15 @@
 name: Tag release
 
 on:
-  # Manually triggered from the GitHub UI
   workflow_dispatch:
     inputs:
       version:
-        description: "Version (without 'v' prefix). If empty, use package.json version."
+        description: "Version (without 'v' prefix). If empty, auto-bump patch version in package.json."
         required: false
         default: ""
 
 permissions:
-  contents: write   # needed to push tags
+  contents: write
 
 jobs:
   tag:
@@ -20,35 +19,44 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # important: we need full history to create tags
+          fetch-depth: 0  # we need full history for tags
 
-      - name: Setup Node (for reading package.json if needed)
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Determine version
-        id: get-version
+      - name: Determine and bump version if needed
+        id: version
         run: |
           INPUT_VERSION="${{ github.event.inputs.version }}"
 
           if [ -n "$INPUT_VERSION" ]; then
+            echo "Using provided version: $INPUT_VERSION"
             VERSION="$INPUT_VERSION"
           else
-            # Read version from package.json
-            VERSION=$(node -p "require('./package.json').version")
-          fi
+            echo "No version provided, auto-bumping patch version via npm version..."
 
-          if [ -z "$VERSION" ]; then
-            echo "Version is empty. Provide it as input or ensure package.json has a version."
-            exit 1
+            # Configure git identity for committing
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            # Bump patch version in package.json without creating a git tag
+            npm version patch --no-git-tag-version
+
+            VERSION=$(node -p "require('./package.json').version")
+            echo "New version from package.json: $VERSION"
+
+            # Commit and push the version bump
+            git commit -am "chore: bump version to $VERSION"
+            git push
           fi
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Create and push tag
         run: |
-          VERSION="${{ steps.get-version.outputs.version }}"
+          VERSION="${{ steps.version.outputs.version }}"
           TAG="v${VERSION}"
 
           echo "Tag to create: $TAG"
@@ -59,7 +67,7 @@ jobs:
             exit 1
           fi
 
-          # Configure git user for tagging
+          # Configure git identity (in case we didn't in previous step)
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 

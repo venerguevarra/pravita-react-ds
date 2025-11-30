@@ -1,21 +1,27 @@
 import {
   Button as MantineButton,
-  type ButtonProps,
+  type ButtonProps as MantineButtonProps,
   type MantineColor,
-} from "@mantine/core";
+} from '@mantine/core';
+import type React from 'react';
 
-export type ButtonVariant = "primary" | "secondary" | "subtle";
+export type ButtonVariant = 'primary' | 'secondary' | 'subtle';
 
 export interface ButtonPropsExtended
-  extends Omit<ButtonProps, "variant" | "color"> {
+  extends Omit<MantineButtonProps, 'variant' | 'color' | 'onClick'> {
   variant?: ButtonVariant;
   tone?: MantineColor;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export function Button(props: ButtonPropsExtended) {
-  const { variant = "primary", tone = "brand", children, ...rest } = props;
 
-  if (variant === "secondary") {
+export function Button({
+  variant = 'primary',
+  tone = 'brand',
+  children,
+  ...rest
+}: ButtonPropsExtended) {
+  if (variant === 'secondary') {
     return (
       <MantineButton variant="outline" color={tone} {...rest}>
         {children}
@@ -23,7 +29,7 @@ export function Button(props: ButtonPropsExtended) {
     );
   }
 
-  if (variant === "subtle") {
+  if (variant === 'subtle') {
     return (
       <MantineButton variant="light" color={tone} {...rest}>
         {children}
@@ -31,7 +37,6 @@ export function Button(props: ButtonPropsExtended) {
     );
   }
 
-  // primary
   return (
     <MantineButton color={tone} {...rest}>
       {children}

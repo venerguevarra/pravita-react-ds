@@ -1,0 +1,72 @@
+name: Tag release
+
+on:
+  # Manually triggered from the GitHub UI
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version (without 'v' prefix). If empty, use package.json version."
+        required: false
+        default: ""
+
+permissions:
+  contents: write   # needed to push tags
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # important: we need full history to create tags
+
+      - name: Setup Node (for reading package.json if needed)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Determine version
+        id: get-version
+        run: |
+          INPUT_VERSION="${{ github.event.inputs.version }}"
+
+          if [ -n "$INPUT_VERSION" ]; then
+            VERSION="$INPUT_VERSION"
+          else
+            # Read version from package.json
+            VERSION=$(node -p "require('./package.json').version")
+          fi
+
+          if [ -z "$VERSION" ]; then
+            echo "Version is empty. Provide it as input or ensure package.json has a version."
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create and push tag
+        run: |
+          VERSION="${{ steps.get-version.outputs.version }}"
+          TAG="v${VERSION}"
+
+          echo "Tag to create: $TAG"
+
+          # Check if tag already exists
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "❌ Tag '$TAG' already exists."
+            exit 1
+          fi
+
+          # Configure git user for tagging
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          echo "🏷️  Creating tag $TAG"
+          git tag "$TAG"
+
+          echo "📤 Pushing tag $TAG to origin"
+          git push origin "$TAG"
+
+          echo "✅ Tag $TAG created and pushed."

@@ -3,39 +3,24 @@ import {
   type ButtonProps as MantineButtonProps,
   type MantineColor,
 } from '@mantine/core';
+import type React from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'subtle';
 
-/**
- * Props for the design system Button component.
- * Wraps Mantine's Button but exposes a simplified, DS-friendly API.
- */
 export interface ButtonPropsExtended
-  extends Omit<MantineButtonProps, 'variant' | 'color'> {
-  /**
-   * Design-system level variant.
-   *
-   * - `primary`: filled brand button
-   * - `secondary`: outline button
-   * - `subtle`: light / ghost-style button
-   */
+  extends Omit<MantineButtonProps, 'variant' | 'color' | 'onClick'> {
   variant?: ButtonVariant;
-
-  /**
-   * Tone maps to Mantine's `color` prop.
-   * Defaults to the design system primary color, `"brand"`.
-   */
   tone?: MantineColor;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export function Button(props: ButtonPropsExtended) {
-  const {
-    variant = 'primary',
-    tone = 'brand',
-    children,
-    ...rest
-  } = props;
 
+export function Button({
+  variant = 'primary',
+  tone = 'brand',
+  children,
+  ...rest
+}: ButtonPropsExtended) {
   if (variant === 'secondary') {
     return (
       <MantineButton variant="outline" color={tone} {...rest}>
@@ -52,7 +37,6 @@ export function Button(props: ButtonPropsExtended) {
     );
   }
 
-  // primary
   return (
     <MantineButton color={tone} {...rest}>
       {children}

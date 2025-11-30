@@ -192,3 +192,44 @@ Storybook is deployed via GitHub Pages:
 3.  Export in `src/components/index.ts`
 4.  Export in `src/index.ts`
 5.  Build & test
+
+
+---
+
+
+
+
+
+🔥 Next possible enhancements
+
+1. Add more DS components
+Buttons → Inputs → Form fields → Layout → Typography → Cards → Modals
+
+2. Add DS documentation
+
+Add Storybook DocsPage
+
+Add auto-props tables
+
+Add examples + theming showcase
+
+3. Add CI quality checks
+
+ESLint + TypeScript checks in PRs
+
+Vitest or Playwright component tests
+
+Chromatic visual regression (optional but cool)
+
+4. Add hub-app upgrade automation
+A simple GitHub workflow that, when you enter a DS tag like v0.0.5, it automatically:
+
+updates hub-app package.json
+
+updates lockfile
+
+commits + pushes
+→ automatic DS upgrades
+
+5. Add multiple tenant themes using CSS variables + DSProvider
+(everything is already ready for this)

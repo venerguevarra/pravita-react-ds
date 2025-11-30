@@ -5,6 +5,7 @@ const config: StorybookConfig = {
     "../src/**/*.mdx",
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
+
   "addons": [
     "@chromatic-com/storybook",
     "@storybook/addon-docs",
@@ -12,9 +13,14 @@ const config: StorybookConfig = {
     "@storybook/addon-a11y",
     "@storybook/addon-vitest"
   ],
+
   "framework": {
     "name": "@storybook/react-vite",
     "options": {}
+  },
+
+  typescript: {
+    reactDocgen: 'react-docgen-typescript',
   }
 };
 export default config;

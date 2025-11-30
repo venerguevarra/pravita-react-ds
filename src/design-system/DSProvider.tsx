@@ -1,6 +1,4 @@
-// src/design-system/DSProvider.tsx
-
-import React, {
+import {
   createContext,
   useContext,
   useMemo,
